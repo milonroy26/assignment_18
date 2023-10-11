@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+
+  firstName     String   @db.VarChar(50)
+  middlename    String   @db.VarChar(50)
+  lastName      String   @db.VarChar(50)
+  mobile        String   @db.VarChar(20)
+  email         String   @unique @db.VarChar(50)
+  passwordDhash String   @db.VarChar(32)
+  registerAt    DateTime @default(now()) @db.Timestamp(0)
+  lastLoginAt   DateTime @default(now()) @db.Timestamp(0)
+  intro         String   @db.TinyText
+  profile       String   @db.Text
+
+  createAt DateTime @default(now()) @db.Timestamp(0)
+  updateAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  posts Post[]
+}
+
+model Post {
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+
+  authorId    BigInt   @db.UnsignedBigInt
+  parentId    BigInt   @db.UnsignedBigInt
+  title       String   @db.VarChar(100)
+  metaTitle   String   @db.VarChar(100)
+  slug        String   @db.VarChar(100)
+  summary     String   @db.TinyText
+  published   Int      @db.TinyInt
+  publishedAt DateTime @default(now()) @db.Timestamp(0)
+  contentText String   @db.Text
+
+  createAt DateTime @default(now()) @db.Timestamp(0)
+  updateAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  userId        BigInt          @db.UnsignedBigInt
+  user          User            @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  post_tag      post_tag[]
+  post_meta     post_meta[]
+  post_category post_category[]
+  post_comment  post_comment[]
+}
+
+model post_comment {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  postId    BigInt   @db.UnsignedBigInt
+  parentId  BigInt   @db.UnsignedBigInt
+  title     String   @db.VarChar(100)
+  published DateTime @db.Timestamp()
+
+  createAt DateTime @default(now()) @db.Timestamp(0)
+  updateAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model Tag {
+  id        BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  title     String @db.VarChar(100)
+  metaTitle String @db.VarChar(100)
+  slug      String @db.VarChar(100)
+  content   String @db.Text
+
+  createAt DateTime @default(now()) @db.Timestamp(0)
+  updateAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  post_tag post_tag[]
+}
+
+model post_tag {
+  id     BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  postId BigInt @db.UnsignedBigInt
+  tagId  BigInt @db.UnsignedBigInt
+
+  createAt DateTime @default(now()) @db.Timestamp(0)
+  updateAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model post_meta {
+  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  postId  BigInt @db.UnsignedBigInt
+  key     String @db.VarChar(100)
+  content String @db.Text
+
+  createAt DateTime @default(now()) @db.Timestamp(0)
+  updateAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model post_category {
+  id         BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  postId     BigInt @db.UnsignedBigInt
+  categoryId BigInt @db.UnsignedBigInt
+
+  createAt DateTime @default(now()) @db.Timestamp(0)
+  updateAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  post     Post     @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model Category {
+  id        BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  parentId  BigInt @db.UnsignedBigInt
+  title     String @db.VarChar(100)
+  metaTitle String @db.VarChar(100)
+  slug      String @db.VarChar(100)
+  content   String @db.Text
+
+  createAt      DateTime        @default(now()) @db.Timestamp(0)
+  updateAt      DateTime        @default(now()) @updatedAt @db.Timestamp(0)
+  post_category post_category[]
+}
