@@ -1,83 +1,97 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-export async function POST(req, res) {
+export const POST = async (req, res) => {
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
-
-  //   ☝Create operation using User model
-  // try {
-  //   const prisma = new PrismaClient();
-  //   const reqBody = await req.json();
-  //   reqBody["registerAt"] = new Date(reqBody["registerAt"]);
-  //   reqBody["lastLoginAt"] = new Date(reqBody["lastLoginAt"]);
-  //   const result = await prisma.user.create({
-  //     data: reqBody,
-  //   });
-  //   return NextResponse.json({
-  //     status: "success",
-  //     data: result,
-  //   });
-  // } catch (e) {
-  //   return NextResponse.json({
-  //     status: "Failed",
-  //     message: e.message,
-  //   });
-  // }
-
-  //   ☝ Read operation using User model
-  //   try {
-  //     const prisma = new PrismaClient();
-  //     const result = await prisma.user.findMany();
-  //     return NextResponse.json({
-  //       status: "success",
-  //       data: result,
-  //     });
-  //   } catch (e) {
-  //     return NextResponse.json({
-  //       status: "Failed",
-  //       message: e.message,
-  //     });
-  //   }
-
-  //   ☝ Update operation using User model
-  // try {
-  //   const prisma = new PrismaClient();
-  //   const reqBody = await req.json();
-  //   const result = await prisma.user.update({
-  //     where: {
-  //       id: reqBody["id"],
-  //     },
-  //     data: reqBody,
-  //   });
-  //   return NextResponse.json({
-  //     status: "success",
-  //     data: result,
-  //   });
-  // } catch (e) {
-  //   return NextResponse.json({
-  //     status: "Failed",
-  //     message: e.message,
-  //   });
-  // }
-
-  //   ☝ Delate operation using User model
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.user.delete({
-      where: {
-        id: 3,
+    const result = await prisma.user.create({
+      data: {
+        email: "milon@gmail.com",
+        firstName: "milon",
+        middleName: "chandro",
+        lastName: "roy",
+        intro: "User",
+        mobile: "1237191231273",
+        passwordHash: "123123fdnsoijf",
+        intro: "news",
+        profile: "milon roy",
       },
     });
     return NextResponse.json({
       status: "success",
       data: result,
     });
-  } catch (e) {
+  } catch (error) {
     return NextResponse.json({
-      status: "Failed",
-      message: e.message,
+      status: "failed",
+      data: error,
     });
   }
-}
+};
+
+export const GET = async () => {
+  try {
+    const prisma = new PrismaClient();
+    const result = await prisma.user.findMany({});
+    return NextResponse.json({
+      status: "success",
+      data: result,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: "failed",
+      data: error,
+    });
+  }
+};
+
+export const PUT = async (req, res) => {
+  try {
+    const prisma = new PrismaClient();
+    const { searchParams } = new URL(req.url);
+    const id = +searchParams.get("id");
+    const result = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        firstName: "updatedName",
+        email: "updatedmail@gmail.com",
+      },
+    });
+    return NextResponse.json({
+      status: "success",
+      data: result,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: "failed",
+      data: error,
+    });
+  }
+};
+
+export const DELETE = async (req, res) => {
+  try {
+    const prisma = new PrismaClient();
+    const { searchParams } = new URL(req.url);
+    const id = +searchParams.get("id");
+    const result = await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+    return NextResponse.json({
+      status: "success",
+      data: result,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: "failed",
+      data: error,
+    });
+  }
+};

@@ -1,82 +1,100 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-export async function POST(req, res) {
+//   ☝ Create operation
+export const POST = async (req, res) => {
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
-
-  //   ☝Create operation using Post model
   try {
     const prisma = new PrismaClient();
-    const reqBody = await req.json();
-    reqBody["publishedAt"] = new Date(reqBody["publishedAt"]);
-    const result = await prisma.Post.create({
-      data: reqBody,
+    const result = await prisma.post.create({
+      data: {
+        content:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, aspernatur! Porro nulla at ut consequuntur nostrum doloremque, blanditiis nam autem!",
+        metaTitle: "news blog",
+        slug: "hot-post",
+        published: true,
+        summary: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+        title: "beautiful news",
+        authorId: 3,
+      },
     });
     return NextResponse.json({
       status: "success",
       data: result,
     });
-  } catch (e) {
+  } catch (error) {
     return NextResponse.json({
-      status: "Failed",
-      message: e.message,
+      status: "failed",
+      data: error,
     });
   }
+};
 
-  //   ☝ Read operation using User model
-  //   try {
-  //     const prisma = new PrismaClient();
-  //     const result = await prisma.user.findMany();
-  //     return NextResponse.json({
-  //       status: "success",
-  //       data: result,
-  //     });
-  //   } catch (e) {
-  //     return NextResponse.json({
-  //       status: "Failed",
-  //       message: e.message,
-  //     });
-  //   }
+//   ☝ Read operation
+export const GET = async () => {
+  try {
+    const prisma = new PrismaClient();
+    const result = await prisma.post.findMany({});
+    return NextResponse.json({
+      status: "success",
+      data: result,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: "failed",
+      data: error,
+    });
+  }
+};
 
-  //   ☝ Update operation using User model
-  // try {
-  //   const prisma = new PrismaClient();
-  //   const reqBody = await req.json();
-  //   const result = await prisma.user.update({
-  //     where: {
-  //       id: reqBody["id"],
-  //     },
-  //     data: reqBody,
-  //   });
-  //   return NextResponse.json({
-  //     status: "success",
-  //     data: result,
-  //   });
-  // } catch (e) {
-  //   return NextResponse.json({
-  //     status: "Failed",
-  //     message: e.message,
-  //   });
-  // }
+//   ☝ Update operation
+export const PUT = async (req, res) => {
+  try {
+    const prisma = new PrismaClient();
+    const { searchParams } = new URL(req.url);
+    const id = +searchParams.get("id");
+    const result = await prisma.post.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: "Updated Post Title",
+        metaTitle: "Updated meta Title",
+      },
+    });
+    return NextResponse.json({
+      status: "success",
+      data: result,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: "failed",
+      data: error,
+    });
+  }
+};
 
-  //   ☝ Delate operation using User model
-  //   try {
-  //     const prisma = new PrismaClient();
-  //     const result = await prisma.user.delete({
-  //       where: {
-  //         id: 3,
-  //       },
-  //     });
-  //     return NextResponse.json({
-  //       status: "success",
-  //       data: result,
-  //     });
-  //   } catch (e) {
-  //     return NextResponse.json({
-  //       status: "Failed",
-  //       message: e.message,
-  //     });
-  //   }
-}
+//   ☝ Delete operation
+export const DELETE = async (req, res) => {
+  try {
+    const prisma = new PrismaClient();
+    const { searchParams } = new URL(req.url);
+    const id = +searchParams.get("id");
+    const result = await prisma.post.delete({
+      where: {
+        id: id,
+      },
+    });
+    return NextResponse.json({
+      status: "success",
+      data: result,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: "failed",
+      data: error,
+    });
+  }
+};
