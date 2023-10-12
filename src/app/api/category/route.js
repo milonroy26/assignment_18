@@ -8,13 +8,28 @@ export const POST = async (req, res) => {
   };
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.category.create({
-      data: {
-        title: "This is the category title",
-        content: "This is the category content",
-        slug: "category slug",
-        metaTitle: "This is the category meta title",
-      },
+    const result = await prisma.category.createMany({
+      data: [
+        {
+          title: "This is the category title",
+          metaTitle: "This is the category meta title",
+          slug: "category slug",
+          content: "This is the category content",
+        },
+        {
+          title: "This is the category title 2",
+          metaTitle: "This is the category meta title 2",
+          slug: "category slug 2",
+          content: "This is the category content 2",
+        },
+        {
+          parentId: 1,
+          title: "This is the category title 3",
+          metaTitle: "This is the category meta title 3",
+          slug: "category slug 3",
+          content: "This is the category content 3",
+        },
+      ],
     });
     return NextResponse.json({
       status: "success",
@@ -56,8 +71,8 @@ export const PUT = async (req, res) => {
         id: id,
       },
       data: {
-        title: "Updated Post Title",
-        metaTitle: "Updated meta Title",
+        title: "Updated category Title",
+        metaTitle: "Updated category meta Title",
       },
     });
     return NextResponse.json({

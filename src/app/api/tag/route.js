@@ -8,37 +8,21 @@ export const POST = async (req, res) => {
   };
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.user.create({
-      data: {
-        email: "post@gmail.com",
-        firstName: "Miloon",
-        middleName: "Chandra",
-        lastName: "Roy",
-        intro: "I am fullstack developer",
-        mobile: "2173491273",
-        passwordHash: "213123123",
-        profile: "google.com",
-        post: {
-          create: [
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-          ],
+    const result = await prisma.tag.createMany({
+      data: [
+        {
+          title: "This is the title",
+          metaTitle: "This is the meta title",
+          slug: "This is the slug",
+          content: "This is the content",
         },
-      },
+        {
+          title: "This is the title 2",
+          metaTitle: "This is the meta title 2",
+          slug: "This is the slug 2",
+          content: "This is the content 2",
+        },
+      ],
     });
     return NextResponse.json({
       status: "success",
@@ -47,7 +31,7 @@ export const POST = async (req, res) => {
   } catch (error) {
     return NextResponse.json({
       status: "failed",
-      data: error,
+      data: error.message,
     });
   }
 };
@@ -56,7 +40,7 @@ export const POST = async (req, res) => {
 export const GET = async () => {
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.post.findMany({});
+    const result = await prisma.tag.findMany({});
     return NextResponse.json({
       status: "success",
       data: result,
@@ -75,13 +59,13 @@ export const PUT = async (req, res) => {
     const prisma = new PrismaClient();
     const { searchParams } = new URL(req.url);
     const id = +searchParams.get("id");
-    const result = await prisma.post.update({
+    const result = await prisma.tag.update({
       where: {
         id: id,
       },
       data: {
-        title: "Updated Post Title",
-        metaTitle: "Updated meta Title",
+        title: "This is the updated title",
+        metaTitle: "This is the updated meta title",
       },
     });
     return NextResponse.json({
@@ -102,7 +86,7 @@ export const DELETE = async (req, res) => {
     const prisma = new PrismaClient();
     const { searchParams } = new URL(req.url);
     const id = +searchParams.get("id");
-    const result = await prisma.post.delete({
+    const result = await prisma.tag.delete({
       where: {
         id: id,
       },

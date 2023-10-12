@@ -8,36 +8,13 @@ export const POST = async (req, res) => {
   };
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.user.create({
+    const { searchParams } = new URL(req.url);
+    const postId = +searchParams.get("id");
+    const categoryId = +searchParams.get("id");
+    const result = await prisma.post_category.create({
       data: {
-        email: "post@gmail.com",
-        firstName: "Miloon",
-        middleName: "Chandra",
-        lastName: "Roy",
-        intro: "I am fullstack developer",
-        mobile: "2173491273",
-        passwordHash: "213123123",
-        profile: "google.com",
-        post: {
-          create: [
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-          ],
-        },
+        postId: postId,
+        categoryId: categoryId,
       },
     });
     return NextResponse.json({
@@ -47,7 +24,7 @@ export const POST = async (req, res) => {
   } catch (error) {
     return NextResponse.json({
       status: "failed",
-      data: error,
+      data: error.message,
     });
   }
 };
@@ -56,7 +33,7 @@ export const POST = async (req, res) => {
 export const GET = async () => {
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.post.findMany({});
+    const result = await prisma.post_category.findMany({});
     return NextResponse.json({
       status: "success",
       data: result,
@@ -75,13 +52,13 @@ export const PUT = async (req, res) => {
     const prisma = new PrismaClient();
     const { searchParams } = new URL(req.url);
     const id = +searchParams.get("id");
-    const result = await prisma.post.update({
+    const result = await prisma.post_category.update({
       where: {
         id: id,
       },
       data: {
-        title: "Updated Post Title",
-        metaTitle: "Updated meta Title",
+        postId: postId,
+        categoryId: categoryId,
       },
     });
     return NextResponse.json({
@@ -102,7 +79,7 @@ export const DELETE = async (req, res) => {
     const prisma = new PrismaClient();
     const { searchParams } = new URL(req.url);
     const id = +searchParams.get("id");
-    const result = await prisma.post.delete({
+    const result = await prisma.post_category.delete({
       where: {
         id: id,
       },
