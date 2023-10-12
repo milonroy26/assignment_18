@@ -8,44 +8,12 @@ export const POST = async (req, res) => {
   };
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.user.create({
+    const result = await prisma.post_comment.create({
       data: {
-        // content:
-        //   "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, aspernatur! Porro nulla at ut consequuntur nostrum doloremque, blanditiis nam autem!",
-        // metaTitle: "news blog",
-        // slug: "hot-post",
-        // published: true,
-        // summary: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        // title: "beautiful news",
-        // authorId: 4,
-        email: "post@gmail.com",
-        firstName: "Miloon",
-        middleName: "Chandra",
-        lastName: "Roy",
-        intro: "I am fullstack developer",
-        mobile: "2173491273",
-        passwordHash: "213123123",
-        profile: "google.com",
-        post: {
-          create: [
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-          ],
-        },
+        title: "Lorem ipsum dolor sit amet consectetur adipisicing ",
+        content: "news blog",
+        published: true,
+        postId: 2,
       },
     });
     return NextResponse.json({

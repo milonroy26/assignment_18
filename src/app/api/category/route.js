@@ -8,44 +8,12 @@ export const POST = async (req, res) => {
   };
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.user.create({
+    const result = await prisma.category.create({
       data: {
-        // content:
-        //   "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, aspernatur! Porro nulla at ut consequuntur nostrum doloremque, blanditiis nam autem!",
-        // metaTitle: "news blog",
-        // slug: "hot-post",
-        // published: true,
-        // summary: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        // title: "beautiful news",
-        // authorId: 4,
-        email: "post@gmail.com",
-        firstName: "Miloon",
-        middleName: "Chandra",
-        lastName: "Roy",
-        intro: "I am fullstack developer",
-        mobile: "2173491273",
-        passwordHash: "213123123",
-        profile: "google.com",
-        post: {
-          create: [
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-            {
-              content: "This is my first post",
-              metaTitle: "This is my first post",
-              slug: "first-post",
-              published: true,
-              summary: "This is my first post",
-              title: "This is my first post",
-            },
-          ],
-        },
+        title: "This is the category title",
+        content: "This is the category content",
+        slug: "category slug",
+        metaTitle: "This is the category meta title",
       },
     });
     return NextResponse.json({
@@ -55,7 +23,7 @@ export const POST = async (req, res) => {
   } catch (error) {
     return NextResponse.json({
       status: "failed",
-      data: error,
+      data: error.message,
     });
   }
 };
@@ -64,7 +32,7 @@ export const POST = async (req, res) => {
 export const GET = async () => {
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.post.findMany({});
+    const result = await prisma.category.findMany({});
     return NextResponse.json({
       status: "success",
       data: result,
@@ -83,7 +51,7 @@ export const PUT = async (req, res) => {
     const prisma = new PrismaClient();
     const { searchParams } = new URL(req.url);
     const id = +searchParams.get("id");
-    const result = await prisma.post.update({
+    const result = await prisma.category.update({
       where: {
         id: id,
       },
@@ -110,7 +78,7 @@ export const DELETE = async (req, res) => {
     const prisma = new PrismaClient();
     const { searchParams } = new URL(req.url);
     const id = +searchParams.get("id");
-    const result = await prisma.post.delete({
+    const result = await prisma.category.delete({
       where: {
         id: id,
       },

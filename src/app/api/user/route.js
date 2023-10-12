@@ -7,18 +7,31 @@ export const POST = async (req, res) => {
   };
   try {
     const prisma = new PrismaClient();
-    const result = await prisma.user.create({
-      data: {
-        email: "milon@gmail.com",
-        firstName: "milon",
-        middleName: "chandro",
-        lastName: "roy",
-        intro: "User",
-        mobile: "1237191231273",
-        passwordHash: "123123fdnsoijf",
-        intro: "news",
-        profile: "milon roy",
-      },
+    const result = await prisma.user.createMany({
+      data: [
+        {
+          email: "milon@gmail.com",
+          firstName: "milon",
+          middleName: "chandro",
+          lastName: "roy",
+          intro: "User",
+          mobile: "1237191231273",
+          passwordHash: "123123fdnsoijf",
+          intro: "news",
+          profile: "facebook.com",
+        },
+        {
+          email: "santo@gmail.com",
+          firstName: "santo",
+          middleName: "chandro",
+          lastName: "roy",
+          intro: "User",
+          mobile: "1237191231273",
+          passwordHash: "123123fdnsoijf",
+          intro: "news",
+          profile: "facebook.com",
+        },
+      ],
     });
     return NextResponse.json({
       status: "success",
